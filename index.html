@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Command Execution Page</title>
+</head>
+<body>
+  <h1>Enter your command:</h1>
+  <input type="text" id="command">
+  <button onclick="runCommand()">Run</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    function runCommand() {
+      const command = document.getElementById('command').value;
+      const output = document.getElementById('output');
+
+      // Create a new WebSocket connection
+      const ws = new WebSocket('ws://localhost:8080');
+
+      // When the connection is open, send the command to the server
+      ws.onopen = () => {
+        ws.send(command);
+      };
+
+      // When the server sends a message, update the output
+      ws.onmessage = (event) => {
+        output.innerText = event.data;
+      };
+
+      // When the connection closes, clean up
+      ws.onclose = () => {
+        ws.close();
+      };
+    }
+  </script>
+</body>
+</html>
